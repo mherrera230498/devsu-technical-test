@@ -27,7 +27,7 @@ image:
         keyRef: database_password
 
 service:
-  type: NodePort
+  type: LoadBalancer
   port: 80
   targetPort: 8000
   nodePort: 30000
