@@ -1,0 +1,86 @@
+deployment:
+  replicaCount: 2
+  strategy:
+    type: RollingUpdate
+    maxSurge: 50%
+    maxUnavailable: 25%
+
+
+image:
+  repository: ghcr.io/mherrera230498/devsu-technical-test
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  requests:    
+    cpu: 10m
+    memory: 128Mi
+  env:
+    enabled: true
+    configMaps:
+      - name: WORK_ENVIRONMENT
+        keyRef: work_environment
+    secrets:
+      - name: DATABASE_NAME
+        keyRef: database_name
+      - name: DATABASE_USER
+        keyRef: database_user
+      - name: DATABASE_PASSWORD
+        keyRef: database_password
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8000
+  nodePort: 30000
+  externalIp:
+  annotations: 
+    # service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    # service.beta.kubernetes.io/aws-load-balancer-type: "internal"
+    # service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 50
+  # targetMemoryUtilizationPercentage: 50
+
+probes:
+  enabled: true
+  liveness:
+    path: /
+    initialDelaySeconds: 20
+    periodSeconds: 60
+  readiness:
+    path: /
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  startup:
+    path: /
+    failureThreshold: 3
+    periodSeconds: 3
+
+configMap:
+  data:
+    work_environment: helm
+
+secret:
+  data:
+    database_name: Li9kZXZEb2NrZXIuc3FsaXRl
+    database_user: ZGJVc2Vy
+    database_password: ZGJQYXNz
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: 
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: "test.host"
+      paths:
+        - path: /(.*)
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
