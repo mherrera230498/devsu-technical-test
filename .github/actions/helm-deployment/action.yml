@@ -16,7 +16,7 @@ inputs:
   execute_helm_test:
     required: false
     default: false
-  helm_custom_args:
+  service_type:
     required: false
   
 runs:
@@ -31,7 +31,7 @@ runs:
           --set image.repository="$IMAGE_REPOSITORY_LOWERCASE" \
           --set image.tag="${{ inputs.image_tag }}" \
           --set configMap.data.work_environment="${{ inputs.helm_namespace }}" \
-          "${{ inputs.helm_custom_args }}"
+          --set service.type="${{ inputs.service_type }}"
       shell: bash
     - run: sleep 30 && helm test "$DEPLOYMENT_NAME_LOWERCASE" -n "${{ inputs.helm_namespace }}"
       if: inputs.execute_helm_test == 'true'
