@@ -4,7 +4,7 @@ Repository used for the DevOps Engineer job position technical test
 
 ## Architecture
 
-![alt text](https://github.com/mherrera230498/Prueba-Test/blob/main/diagram.jpg?raw=true)
+![alt text](https://github.com/mherrera230498/Prueba-Test/blob/main/readme_imgs/diagram.png?raw=true)
 
 ## Deploying to Local Environment with NodeJS
 
@@ -196,7 +196,7 @@ If the response is unsuccessful, we will receive status 400 and the following me
 
 ### Workflow
 
-![alt text](https://github.com/mherrera230498/Prueba-Test/blob/main/github-action-workflow.jpg?raw=true)
+![alt text](https://github.com/mherrera230498/Prueba-Test/blob/main/readme_imgs/github-action-workflow.png?raw=true)
 
 ### Prerequisites
 
