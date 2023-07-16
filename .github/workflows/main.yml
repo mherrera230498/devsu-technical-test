@@ -2,7 +2,7 @@ name: My App to EKS with Helm Workflow
 
 on:
   push:
-    branches: [ master ]  
+    branches: [ master ]
   pull_request:
     branches: [ master ]
   
@@ -170,7 +170,7 @@ jobs:
       - name: Set kubectl eks context
         run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
       - name: Deploy helm chart to EKS
-        uses: ./.github/actions/helm-eks-deployment
+        uses: ./.github/actions/helm-deployment
         with:
           helm_namespace: ${{ vars.HELM_NAMESPACE }}
           helm_chart_directory: ${{ env.HELM_CHART_DIRECTORY }}
