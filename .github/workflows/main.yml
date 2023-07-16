@@ -44,10 +44,49 @@ jobs:
         run: npm ci
       - name: Eslint
         run: npx eslint .
+        
+  snyk:
+    if: always()
+    runs-on: ubuntu-latest    
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+      - name: Perform SAST
+        if: always()
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
+          args: --severity-threshold=medium --sarif-file-output=snyk-sast.sarif
+      - name: Perform SCA
+        if: always()
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+          args: --severity-threshold=medium --sarif-file-output=snyk-sca.sarif
+      - name: Upload SAST result to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-sast.sarif
+          category: sast
+      - name: Upload SCA result to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-sca.sarif
+          category: sca
 
   docker-build:
     if: always()
-    needs: [build-and-test, eslint]
+    needs: [build-and-test, eslint, snyk]
     runs-on: ubuntu-latest
     permissions:
       contents: read
