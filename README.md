@@ -253,6 +253,6 @@ I first created a dummy-repository (https://github.com/mherrera230498/Prueba-Tes
 
 The pipeline is configured to bypass the test/analysis errors for demonstrative reasons.
 
-Kubernetes files generated are:Deployment, Service, HPA, ConfigMap, Secret, Ingress.
+Kubernetes files generated are:Deployment, Service, HPA, ConfigMap, Secret, Ingress.
 
 The app deployed in EKS/Fargate cant be accessed from internet because AWS internal configurations, it requires additional configuration in the Kubernetes Cluster(Not EKS) that is outside of scope. That’s why we use helm test to check if the app is running.
