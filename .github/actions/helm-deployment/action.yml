@@ -1,5 +1,5 @@
-name: Deploy helm chart to EKS
-description: 'Deploy helm chart to eks'
+name: Deploy helm chart
+description: 'Deploy helm chart'
 inputs:
   deployment_name:
     required: false
