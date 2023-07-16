@@ -26,7 +26,7 @@ runs:
     - run: |
           helm upgrade --install -n ${{ inputs.helm_namespace }} --create-namespace $DEPLOYMENT_NAME_LOWERCASE ${{ inputs.helm_chart_directory }} \
           --set image.repository=$IMAGE_REPOSITORY_LOWERCASE \
-          --set image.tag=${{ inputs.image_tag }}
+          --set image.tag=${{ inputs.image_tag }} \
           --set configMap.data.work_environment=${{ inputs.helm_namespace }}
       shell: bash
     - run: sleep 30 && helm test $DEPLOYMENT_NAME_LOWERCASE -n ${{ inputs.helm_namespace }}
