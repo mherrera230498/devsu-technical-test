@@ -3,6 +3,8 @@ name: My App to EKS with Helm Workflow
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - README.md
   pull_request:
     branches: [ master ]
   
