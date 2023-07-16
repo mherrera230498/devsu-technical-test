@@ -16,19 +16,23 @@ inputs:
   execute_helm_test:
     required: false
     default: false
+  helm_custom_args:
+    required: false
+  
 runs:
   using: "composite"
   steps:
-    - run: echo "DEPLOYMENT_NAME_LOWERCASE=$(echo ${{ inputs.deployment_name }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+    - run: echo "DEPLOYMENT_NAME_LOWERCASE=$(echo "${{ inputs.deployment_name }}" | awk '{print tolower($0)}')" >> $GITHUB_ENV
       shell: bash
-    - run: echo "IMAGE_REPOSITORY_LOWERCASE=$(echo ${{ inputs.image_repository }} | awk '{print tolower($0)}')" >> $GITHUB_ENV
+    - run: echo "IMAGE_REPOSITORY_LOWERCASE=$(echo "${{ inputs.image_repository }}" | awk '{print tolower($0)}')" >> $GITHUB_ENV
       shell: bash
     - run: |
-          helm upgrade --install -n ${{ inputs.helm_namespace }} --create-namespace $DEPLOYMENT_NAME_LOWERCASE ${{ inputs.helm_chart_directory }} \
-          --set image.repository=$IMAGE_REPOSITORY_LOWERCASE \
-          --set image.tag=${{ inputs.image_tag }} \
-          --set configMap.data.work_environment=${{ inputs.helm_namespace }}
+          helm upgrade --install -n "${{ inputs.helm_namespace }}" --create-namespace "$DEPLOYMENT_NAME_LOWERCASE" "${{ inputs.helm_chart_directory }}" \
+          --set image.repository="$IMAGE_REPOSITORY_LOWERCASE" \
+          --set image.tag="${{ inputs.image_tag }}" \
+          --set configMap.data.work_environment="${{ inputs.helm_namespace }}" \
+          "${{ inputs.helm_custom_args }}"
       shell: bash
-    - run: sleep 30 && helm test $DEPLOYMENT_NAME_LOWERCASE -n ${{ inputs.helm_namespace }}
+    - run: sleep 30 && helm test "$DEPLOYMENT_NAME_LOWERCASE" -n "${{ inputs.helm_namespace }}"
       if: inputs.execute_helm_test == 'true'
       shell: bash
