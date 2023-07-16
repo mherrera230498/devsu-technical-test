@@ -247,6 +247,12 @@ helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 hel
 If you used load balancers services wait a few minutes before destroying the environment with terraform.
 If it fails, the reason may be a nic or load balancer that didnt got deleted by AWS and should be deleted manually before executing terraform destroy again.
 
-## Note
+## Notes
 
 I first created a dummy-repository (https://github.com/mherrera230498/Prueba-Test) for speed/time purposes, that way I could test all the files until everything worked correctly. Then I created the final repo where I followed branching and git good practices.
+
+The pipeline is configured to bypass the test/analysis errors for demonstrative reasons.
+
+Kubernetes files generated are:Deployment, Service, HPA, ConfigMap, Secret, Ingress
+
+The app deployed in EKS/Fargate cant be accessed from internet because AWS internal configurations, it requires additional configuration in the Kubernetes Cluster(Not EKS) that is outside of scope. That’s why we use helm test to check if the app is running.
