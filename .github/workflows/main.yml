@@ -149,4 +149,31 @@ jobs:
           image_repository: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           image_tag: ${{ env.IMAGE_VERSION }}
           execute_helm_test: ${{ vars.EXECUTE_HELM_TEST }}
-
+          
+  prod-deploy:
+    if: |
+      always() &&
+      github.ref == 'refs/heads/master'
+    needs: [dev]
+    environment: 
+      name: prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Set kubectl eks context
+        run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
+      - name: Deploy helm chart to EKS
+        uses: ./.github/actions/helm-eks-deployment
+        with:
+          helm_namespace: ${{ vars.HELM_NAMESPACE }}
+          helm_chart_directory: ${{ env.HELM_CHART_DIRECTORY }}
+          image_repository: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          image_tag: ${{ env.IMAGE_VERSION }}
+          execute_helm_test: ${{ vars.EXECUTE_HELM_TEST }}
