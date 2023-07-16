@@ -2,9 +2,9 @@ name: My App to EKS with Helm Workflow
 
 on:
   push:
-    branches: [ main ]  
+    branches: [ master ]  
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
   
 env:
   NODE_VERSION: 18
