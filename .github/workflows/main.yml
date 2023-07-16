@@ -153,6 +153,7 @@ jobs:
           image_repository: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           image_tag: ${{ env.IMAGE_VERSION }}
           execute_helm_test: ${{ vars.EXECUTE_HELM_TEST }}
+          helm_custom_args: '--set service.type="NodePort"'
           
   prod-deploy:
     if: |
